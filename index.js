@@ -1,7 +1,9 @@
-/**
- * A Bot for Slack!
- */
+var wrapp, controller;
+var VERIFICATION_TOKEN = process.env.VERIFICATION_TOKEN;
 
+function isFromSlack(t) {
+    return t === VERIFICATION_TOKEN;
+}
 
 /**
  * Define a function for initiating a conversation on installation
@@ -47,10 +49,12 @@ if (process.env.TOKEN || process.env.SLACK_TOKEN) {
     var customIntegration = require('./lib/custom_integrations');
     var token = (process.env.TOKEN) ? process.env.TOKEN : process.env.SLACK_TOKEN;
     var controller = customIntegration.configure(token, config, onInstallation);
+    console.log('running as a custom integration')
 } else if (process.env.CLIENT_ID && process.env.CLIENT_SECRET && process.env.PORT) {
     //Treat this as an app
-    var app = require('./lib/apps');
-    var controller = app.configure(process.env.PORT, process.env.CLIENT_ID, process.env.CLIENT_SECRET, config, onInstallation);
+    wrapp = require('./lib/apps');
+    controller = wrapp.configure(process.env.PORT, process.env.CLIENT_ID, process.env.CLIENT_SECRET, config, onInstallation);
+    console.log('running as an APP');
 } else {
     console.log('Error: If this is a custom integration, please specify TOKEN in the environment. If this is an app, please specify CLIENTID, CLIENTSECRET, and PORT in the environment');
     process.exit(1);
@@ -72,7 +76,7 @@ controller.on('rtm_open', function (bot) {
 
 controller.on('rtm_close', function (bot) {
     console.log('** The RTM api just closed');
-    // you may want to attempt to re-open
+    wrapp.connectRTM(bot, config);
 });
 
 
@@ -82,6 +86,7 @@ controller.on('rtm_close', function (bot) {
 // BEGIN EDITING HERE!
 
 controller.on('bot_channel_join', function (bot, message) {
+    console.log('bot_channel_join', msg)
     bot.reply(message, "I'm here!")
 });
 
@@ -89,10 +94,37 @@ controller.hears(
     ['hello', 'hi', 'greetings'],
     ['direct_mention', 'mention', 'direct_message'],
     function (bot, message) {
+        console.log('hears', msg.txt)
         bot.reply(message, 'Hello!');
     }
 );
 
+controller.on('slash_command', function (bot, msg) {
+    console.log('handling', msg.command);
+    if (!isFromSlack(msg.token)) {
+        console.log('message not from slack?', msg);
+        return;
+    }
+
+    switch (msg.command) {
+        case '/f':
+            console.log('command /Q received');
+            if (!msg.text || msg.text === 'help') {
+                bot.replyPrivate(msg, 'I find things. Try typing `/f thing I want`.');
+                return;
+            }
+            bot.replyPublic(msg, '1', function () {
+                bot.replyPublicDelayed(msg, '2', function () {
+                    // botkit not thennable yet: https://github.com/howdyai/botkit/issues/416
+                    bot.replyPublicDelayed(msg, '3');
+                })
+            });
+            return;
+        default:
+            console.log('unknown command', msg.command);
+            bot.replyPublic(msg, 'I do not know how to ' + msg.command + ' yet.');
+    }
+});
 
 /**
  * AN example of what could be:
