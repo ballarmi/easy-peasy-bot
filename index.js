@@ -1,5 +1,11 @@
+require('dotenv').config();
+const axios = require('axios');
+
 var wrapp, controller;
 var VERIFICATION_TOKEN = process.env.VERIFICATION_TOKEN;
+
+const user = process.env.USER;
+const pass = process.env.PASS;
 
 function isFromSlack(t) {
     return t === VERIFICATION_TOKEN;
@@ -14,7 +20,7 @@ function onInstallation(bot, installer) {
     if (installer) {
         bot.startPrivateConversation({ user: installer }, function (err, convo) {
             if (err) {
-                console.log(err);
+                console.log('error' + err);
             } else {
                 convo.say('I am a bot that has just joined your team');
                 convo.say('You must now /invite me to a channel so that I can be of use!');
@@ -86,7 +92,7 @@ controller.on('rtm_close', function (bot) {
 // BEGIN EDITING HERE!
 
 controller.on('bot_channel_join', function (bot, message) {
-    console.log('bot_channel_join', msg)
+    console.log('bot_channel_join', message)
     bot.reply(message, "I'm here!")
 });
 
@@ -94,8 +100,31 @@ controller.hears(
     ['hello', 'hi', 'greetings'],
     ['direct_mention', 'mention', 'direct_message'],
     function (bot, message) {
-        console.log('hears', msg.txt)
-        bot.reply(message, 'Hello!');
+        console.log('hears', message)
+        bot.reply(message, 'Hey!');
+    }
+);
+
+controller.hears(
+    ['server:', 'host:'],
+    ['direct_mention', 'mention', 'direct_message'],
+    function (bot, message) {
+        hostname = message.text.substr(message.text.indexOf(":") + 1);
+        console.log('hostname: ' + hostname)
+        formanurl = 'https://foremantest.itapps.miamioh.edu/api/hosts?search=facts.hostname=' + hostname;
+        console.log('hears', message)
+        axios.get(formanurl, {
+            auth: {
+                username: user,
+                password: pass
+            },
+            responseType: 'json',
+        }).then(function (response) {
+            console.log('Authenticated' + JSON.stringify(response.data.results));
+            bot.reply(message, 'Here is the server: ');
+        }).catch(function (error) {
+            console.log('Failed Authentication')
+        });
     }
 );
 
