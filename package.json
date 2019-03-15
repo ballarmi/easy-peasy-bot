@@ -1,5 +1,5 @@
 {
-  "name": "Foreman-searcher",
+  "name": "foreman-searcher",
   "version": "1.0.0",
   "description": "The awesomest bot evar.",
   "main": "index.js",
