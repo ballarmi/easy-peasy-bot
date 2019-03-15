@@ -120,8 +120,9 @@ controller.hears(
             },
             responseType: 'json',
         }).then(function (response) {
-            console.log('Authenticated' + JSON.stringify(response.data.results));
-            bot.reply(message, 'Here is the server: ');
+            json = response.data.results[0].certname;
+            host = String(json);
+            bot.reply(message, 'Here is the server: ' + host);
         }).catch(function (error) {
             console.log('Failed Authentication')
         });
