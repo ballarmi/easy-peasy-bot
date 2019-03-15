@@ -124,7 +124,7 @@ controller.hears(
             if (response.data.subtotal != 0) {
                 json = response.data.results[0].certname;
                 host = String(json);
-                bot.reply(message, "Here is the server: " + host + " Along with a link to the foreman page: "
+                bot.reply(message, "<@" + message.user + "> Here is the server: " + host + "\n Along with a link to the foreman page: "
                     + "https://foremantest.itapps.miamioh.edu/hosts/" + host);
             }
             else {

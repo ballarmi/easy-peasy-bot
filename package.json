@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ballarmi/easy-peasy-bot.git"
+    "url": "git+https://github.com/ballarmi/foreman-searcher-slackbot.git"
   },
   "keywords": [
     "slack",
@@ -18,7 +18,7 @@
   "author": "D.E. Goodman-Wilson",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/ballarmi/easy-peasy-bot/issues"
+    "url": "https://github.com/slackapi/easy-peasy-bot/issues"
   },
   "homepage": "https://github.com/ballarmi/easy-peasy-bot#readme",
   "engines": {
