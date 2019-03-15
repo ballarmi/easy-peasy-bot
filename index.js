@@ -105,11 +105,11 @@ controller.hears(
     }
 );
 
-controller.hears(
-    ['server:', 'host:'],
+controller.on(
     ['direct_mention', 'mention', 'direct_message'],
     function (bot, message) {
-        hostname = message.text.substr(message.text.indexOf(":") + 1);
+        hostname = message.text.substr(message.text.indexOf(" ") + 1);
+        hostname = hostname.toLowerCase();
         console.log('hostname: ' + hostname)
         formanurl = 'https://foremantest.itapps.miamioh.edu/api/hosts?search=facts.hostname=' + hostname;
         console.log('hears', message)
@@ -122,13 +122,23 @@ controller.hears(
         }).then(function (response) {
             console.log(response.data);
             if (response.data.subtotal != 0) {
-                json = response.data.results[0].certname;
-                host = String(json);
-                bot.reply(message, "<@" + message.user + "> Here is the server: " + host + "\n Along with a link to the foreman page: "
-                    + "https://foremantest.itapps.miamioh.edu/hosts/" + host);
+                servername = response.data.results[0].certname;
+                gstatus = String(response.data.results[0].global_status_label); // The global status is the one which appears first in foreman
+                ip = String(response.data.results[0].ip);
+                os = String(response.data.results[0].operatingsystem_name);
+                host_group = String(response.data.results[0].hostgroup_title);
+                host = String(servername);
+                bot.reply(message, "<@" + message.user + "> Server Found: " + host
+                    + "\n Along with a link to the foreman page: "
+                    + "https://foremantest.itapps.miamioh.edu/hosts/" + host
+                    + "\n Additional Info: "
+                    + "\n Status: " + gstatus
+                    + "\n IP: " + ip
+                    + "\n OS: " + os
+                    + "\n Host Group: " + host_group);
             }
             else {
-                bot.reply(message, "No such server found in Foreman. Link to hosts: https://foremantest.itapps.miamioh.edu/hosts");
+                bot.reply(message, "Server not Found. Link to hosts: https://foremantest.itapps.miamioh.edu/hosts");
             }
         }).catch(function (error) {
             console.log('Failed Authentication')
