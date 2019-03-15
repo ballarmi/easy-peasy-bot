@@ -120,9 +120,16 @@ controller.hears(
             },
             responseType: 'json',
         }).then(function (response) {
-            json = response.data.results[0].certname;
-            host = String(json);
-            bot.reply(message, 'Here is the server: ' + host);
+            console.log(response.data);
+            if (response.data.subtotal != 0) {
+                json = response.data.results[0].certname;
+                host = String(json);
+                bot.reply(message, "Here is the server: " + host + " Along with a link to the foreman page: "
+                    + "https://foremantest.itapps.miamioh.edu/hosts/" + host);
+            }
+            else {
+                bot.reply(message, "No such server found in Foreman. Link to hosts: https://foremantest.itapps.miamioh.edu/hosts");
+            }
         }).catch(function (error) {
             console.log('Failed Authentication')
         });
