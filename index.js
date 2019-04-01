@@ -121,7 +121,7 @@ controller.on(
             responseType: 'json',
         }).then(function (response) {
             console.log(response.data);
-            console.log("user: " + user);
+
 
             if (response.data.subtotal != 0) {
                 servername = response.data.results[0].certname;
@@ -144,6 +144,7 @@ controller.on(
             }
         }).catch(function (error) {
             console.log('Failed Authentication' + error)
+            console.log("user: " + user);
             bot.reply(message, "Failed to Authenticate with Foreman")
         });
     }
