@@ -121,6 +121,8 @@ controller.on(
             responseType: 'json',
         }).then(function (response) {
             console.log(response.data);
+            console.log("user: " + user);
+
             if (response.data.subtotal != 0) {
                 servername = response.data.results[0].certname;
                 gstatus = String(response.data.results[0].global_status_label); // The global status is the one which appears first in foreman
