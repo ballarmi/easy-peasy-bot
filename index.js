@@ -141,7 +141,7 @@ controller.on(
                 bot.reply(message, "Server not Found. Link to hosts: https://foremantest.itapps.miamioh.edu/hosts");
             }
         }).catch(function (error) {
-            console.log('Failed Authentication')
+            console.log('Failed Authentication' + error)
             bot.reply(message, "Failed to Authenticate with Foreman")
         });
     }
