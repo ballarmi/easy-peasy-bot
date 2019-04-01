@@ -1,1 +1,1 @@
-worker: node ./lib/apps.js
+worker: node ./lib/custom_integrations.js
