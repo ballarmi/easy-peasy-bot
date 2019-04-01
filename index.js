@@ -142,6 +142,7 @@ controller.on(
             }
         }).catch(function (error) {
             console.log('Failed Authentication')
+            bot.reply(message, "Failed to Authenticate with Foreman")
         });
     }
 );
