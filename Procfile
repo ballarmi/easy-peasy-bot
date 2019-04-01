@@ -1,1 +1,1 @@
-worker: node apps.js
+worker: node ./lib/apps.js
