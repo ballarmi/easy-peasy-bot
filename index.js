@@ -122,10 +122,18 @@ controller.on(
             responseType: 'json',
             baseURL: formanurl,
             url: hostname,
+            proxy: {
+                port: process.env.PORT,
+                auth: {
+                    username: user,
+                    password: pass
+                }
+            }
         }).then(function (response) {
             console.log(response.data);
 
-
+            // Reply with Server info if the GET request found a server (It should never find more than 1)
+            // TODO: Have something in place if search returns more than one server
             if (response.data.subtotal != 0) {
                 servername = response.data.results[0].certname;
                 gstatus = String(response.data.results[0].global_status_label); // The global status is the one which appears first in foreman
@@ -142,11 +150,12 @@ controller.on(
                     + "\n OS: " + os
                     + "\n Host Group: " + host_group);
             }
+            // Server wasn't found, reply with that plus link to servers
             else {
                 bot.reply(message, "Server not Found. Link to hosts: https://foremantest.itapps.miamioh.edu/hosts");
             }
         }).catch(function (error) {
-            console.log('Failed Authentication' + error)
+            console.log('Failed Authentication: \n' + error)
             bot.reply(message, "Failed to Authenticate with Foreman")
         });
     }
