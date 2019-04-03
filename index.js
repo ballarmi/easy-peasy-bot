@@ -123,6 +123,7 @@ controller.on(
             baseURL: formanurl,
             url: hostname,
             proxy: {
+                host: foreman - searcher.herokuapp.com,
                 port: process.env.PORT,
                 auth: {
                     username: user,
