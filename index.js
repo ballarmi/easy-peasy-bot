@@ -114,6 +114,7 @@ controller.on(
         formanurl = 'https://foremantest.itapps.miamioh.edu/api/hosts?search=facts.hostname=' + hostname;
         console.log('hears', message)
         axios.get(formanurl, {
+            withCredentials: true,
             auth: {
                 username: user,
                 password: pass
@@ -144,7 +145,6 @@ controller.on(
             }
         }).catch(function (error) {
             console.log('Failed Authentication' + error)
-            console.log("user: " + user);
             bot.reply(message, "Failed to Authenticate with Foreman")
         });
     }
