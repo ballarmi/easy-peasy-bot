@@ -120,8 +120,7 @@ controller.on(
                 password: pass
             },
             responseType: 'json',
-            baseURL: formanurl,
-            url: hostname,
+            url: formanurl,
             proxy: {
                 host: 'foreman-searcher.herokuapp.com',
                 port: process.env.PORT,
