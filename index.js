@@ -121,14 +121,14 @@ controller.on(
             },
             responseType: 'json',
             url: formanurl,
-            proxy: {
-                host: 'foreman-searcher.herokuapp.com',
-                port: process.env.PORT,
-                auth: {
-                    username: user,
-                    password: pass
-                }
-            }
+            // proxy: {
+            //     // host: 'foreman-searcher.herokuapp.com',
+            //     // port: process.env.PORT,
+            //     auth: {
+            //         username: user,
+            //         password: pass
+            //     }
+            // }
         }).then(function (response) {
             console.log(response.data);
 
